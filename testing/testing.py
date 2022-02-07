@@ -1,27 +1,26 @@
 import fastaparser
 import csv
-import pandas as pd
+from Bio.Seq import Seq
 
-seq_list = []
-edit_list = []
-
-with open("../data/swissprotORF.fasta") as fasta_file:
-    parser = fastaparser.Reader(fasta_file)
-    for seq in parser:
-        seq_list.append({'id': seq.id, 'seq': seq.sequence_as_string()})
-
+edit_dict = {}
 
 with open("../data/aes_profile.csv", newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
-        edit_list.append({'id': row['orf'], 'pos': [int(row['pos'])]})
+        if (row['orf'] not in edit_dict):
+            edit_dict[row['orf']] = [int(row['pos'])]
+        else:
+            edit_dict[row['orf']].append(int(row['pos']))
 
-sortedList = sorted(edit_list, key=lambda x: x['id'])
+def secondary_structure(id, pos_list, sequence, length):
+    for pos in pos_list:
+        rev_comp = sequence[pos-(length//2):pos+(length//2+1)].reverse_complement()
+        if rev_comp in sequence:
+            print(id)
 
-for x in sortedList:
-    for y in seq_list:
-        if x['id'] == y['id']:
-            x['seq'] = y['seq']
-
-for i in range(20):
-    print(sortedList[i])
+with open("../data/swissprotORF.fasta") as fasta_file:
+    parser = fastaparser.Reader(fasta_file)
+    for seq in parser:
+        if (seq.id in edit_dict):
+            secondary_structure(seq.id, edit_dict[seq.id], Seq(seq.sequence_as_string()), 15) 
+            

@@ -1,6 +1,0 @@
-orf,pos,mrna_con,gdna_reads,gdna_con,octo1_A,octo1_C,octo1_G,octo1_T,octo1_tot,octo2_A,octo2_C,octo2_G,octo2_T,octo2_tot,octo3_A,octo3_C,octo3_G,octo3_T,octo3_tot,octo4_A,octo4_C,octo4_G,octo4_T,octo4_tot,octo5_A,octo5_C,octo5_G,octo5_T,octo5_tot,octo6_A,octo6_C,octo6_G,octo6_T,octo6_tot,genomic_codon,genomic_amino,edited_codon,edited_amino,edited_pos_0based,upstream_base,downstream_base
-lcl|TRINITY_DN41_c5_g1_i5:84-8345,8075,G,4,G,0,0,0,0,0,0,0,2,0,2,0,0,2,0,2,0,0,2,0,2,5,0,3,0,8,6,0,1,0,7,CGG,Arg,CGA,Arg,2,G,G
-lcl|TRINITY_DN41_c0_g1_i5:10-915,31,A,238,A,12,0,0,0,12,57,0,0,0,57,46,0,0,0,46,47,0,0,0,47,21,0,0,0,21,77,0,2,0,79,CAA,Gln,CGA,Arg,1,C,A
-lcl|TRINITY_DN41_c5_g1_i5:84-8345,8075,G,4,G,0,0,0,0,0,0,0,2,0,2,0,0,2,0,2,0,0,2,0,2,5,0,3,0,8,6,0,1,0,7,CGG,Arg,CGA,Arg,2,G,G
-lcl|TRINITY_DN41_c0_g1_i5:10-915,33,A,239,A,12,0,0,0,12,57,0,0,0,57,46,0,0,0,46,47,0,0,0,47,21,0,0,0,21,77,0,2,0,79,CAA,Gln,CGA,Arg,1,C,A
-lcl|TRINITY_DN41_c5_g1_i5:84-8345,8076,G,4,G,0,0,0,0,0,0,0,2,0,2,0,0,2,0,2,0,0,2,0,2,5,0,3,0,8,6,0,1,0,7,CGG,Arg,CGA,Arg,2,G,G
