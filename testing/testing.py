@@ -1,3 +1,7 @@
+'''Identifying secondary structures given
+ - FASTA file of genetic sequences
+ - CSV file with potential edit sites
+'''
 import csv
 import fastaparser
 from Bio.Seq import Seq
@@ -14,17 +18,24 @@ with open("../data/aes_profile.csv", newline='', encoding="utf8") as csvfile:
             edit_dict[row['orf']].append(int(row['pos']))
 
 def secondary_structure(pos_list, sequence):
+    '''
+    Takes in:
+        - pos_list: list of potential edit positions
+        - sequence: genetic sequence corresponding to pos_list
+    Returns:
+        - len_list: list of secondary structure lengths for pos_list
+    '''
     len_list = []
     for pos in pos_list:
-        lo = pos
-        hi = pos + 1
-        for i in range(len(sequence)):
-            rev_comp = str(Seq(sequence[lo:hi]).reverse_complement())
+        lo_ = pos
+        hi_ = pos + 1
+        for i in range(len(sequence)): # pylint: disable=unused-variable
+            rev_comp = str(Seq(sequence[lo_:hi_]).reverse_complement())
             if rev_comp not in sequence:
                 break
-            if ((rev_comp in sequence) and (rev_comp not in sequence[lo:hi])):
-                lo -= 1
-                hi += 1
+            if ((rev_comp in sequence) and (rev_comp not in sequence[lo_:hi_])):
+                lo_ -= 1
+                hi_ += 1
         len_list.append(len(rev_comp))
     return len_list
 
@@ -39,5 +50,5 @@ with open('score_list.csv', 'w', newline='', encoding="utf8") as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
     writer.writeheader()
-    for id, score in score_dict.items():
-        writer.writerow({'id': id, 'score': score})
+    for id_, score in score_dict.items():
+        writer.writerow({'id': id_, 'score': score})
