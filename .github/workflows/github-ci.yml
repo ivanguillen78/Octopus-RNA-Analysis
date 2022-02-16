@@ -18,7 +18,7 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip
         pip3 install -r dependencies.txt
-    - name: Analysing code with Pylint
+    - name: Analyzing code with Pylint
       run: |
         pylint $(git ls-files '*.py')
   
