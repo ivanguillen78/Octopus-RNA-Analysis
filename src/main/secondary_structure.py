@@ -11,9 +11,9 @@ from Bio.Seq import Seq
 def create_edit_dict(csv_file):
     '''
     Takes in:
-        - csv file containing ids and edits
+        - csv file containing ids and edits.
     Returns:
-        - edit_dict: ids as keys and list of edits as values
+        - edit_dict: ids as keys and list of edits as values.
     '''
     edit_dict = {}
     with open(csv_file, newline='', encoding="utf8") as csvfile:
