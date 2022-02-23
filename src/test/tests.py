@@ -1,6 +1,7 @@
 #!/usr/bin/python
-from secondary_structure import create_edit_dict
 import sys
+
+from secondary_structure import create_edit_dict
 
 sys.path.append("../main/")
 
