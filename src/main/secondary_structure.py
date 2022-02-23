@@ -5,6 +5,7 @@ Identifying secondary structures given
     - CSV file with potential edit sites
 """
 import csv
+
 import fastaparser
 from Bio.Seq import Seq
 
@@ -43,7 +44,7 @@ def secondary_structure(pos_list, sequence):
             rev_comp = str(Seq(sequence[lo_:hi_]).reverse_complement())
             if rev_comp not in sequence:
                 break
-            if ((rev_comp in sequence) and (rev_comp not in sequence[lo_:hi_])):
+            if (rev_comp in sequence) and (rev_comp not in sequence[lo_:hi_]):
                 lo_ -= 1
                 hi_ += 1
         len_list.append(len(rev_comp))
@@ -64,7 +65,8 @@ def find_secondary_structures(edit_dict, fasta_file):
         for seq in parser:
             if seq.id in edit_dict:
                 score_dict[seq.id] = secondary_structure(
-                    edit_dict[seq.id], seq.sequence_as_string())
+                    edit_dict[seq.id], seq.sequence_as_string()
+                )
     return score_dict
 
 

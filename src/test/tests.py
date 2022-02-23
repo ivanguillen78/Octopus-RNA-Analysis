@@ -1,8 +1,8 @@
 #!/usr/bin/python
+from secondary_structure import create_edit_dict
 import sys
 
 sys.path.append("../main/")
-from secondary_structure import *
 
 
 def test_types():
