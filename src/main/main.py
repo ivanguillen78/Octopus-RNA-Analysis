@@ -2,7 +2,9 @@
 '''Main source file'''
 
 from secondary_structure import *
+import sys
 
-edit_dict = create_edit_dict("../../data/aes_profile.csv")
+edit_dict = create_edit_dict(sys.argv[1])
 
-print(type())
+for k,v in edit_dict.items():
+    print(k,v)
