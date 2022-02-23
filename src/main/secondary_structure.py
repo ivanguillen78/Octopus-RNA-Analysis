@@ -8,6 +8,7 @@ import csv
 import fastaparser
 from Bio.Seq import Seq
 
+
 def create_edit_dict(csv_file):
     """
     Takes in:
@@ -25,6 +26,7 @@ def create_edit_dict(csv_file):
                 edit_dict[row["orf"]].append(int(row["pos"]))
     return edit_dict
 
+
 def secondary_structure(pos_list, sequence):
     """
     Takes in:
@@ -37,7 +39,7 @@ def secondary_structure(pos_list, sequence):
     for pos in pos_list:
         lo_ = pos
         hi_ = pos + 1
-        for i in range(len(sequence)): # pylint: disable=unused-variable
+        for i in range(len(sequence)):  # pylint: disable=unused-variable
             rev_comp = str(Seq(sequence[lo_:hi_]).reverse_complement())
             if rev_comp not in sequence:
                 break
@@ -46,6 +48,7 @@ def secondary_structure(pos_list, sequence):
                 hi_ += 1
         len_list.append(len(rev_comp))
     return len_list
+
 
 def find_secondary_structures(edit_dict, fasta_file):
     """
@@ -60,9 +63,10 @@ def find_secondary_structures(edit_dict, fasta_file):
         parser = fastaparser.Reader(fastafile)
         for seq in parser:
             if seq.id in edit_dict:
-                score_dict[seq.id] = secondary_structure(edit_dict[seq.id],
-                                                         seq.sequence_as_string())
+                score_dict[seq.id] = secondary_structure(
+                    edit_dict[seq.id], seq.sequence_as_string())
     return score_dict
+
 
 def create_output_csv(file_name, score_dict):
     """
