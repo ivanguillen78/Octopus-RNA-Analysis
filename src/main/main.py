@@ -1,10 +1,10 @@
 #!/usr/bin/python
-'''Main source file'''
+"""Main source file"""
 
-from secondary_structure import *
+import secondary_structure
 import sys
 
-edit_dict = create_edit_dict(sys.argv[1])
+edit_dict = secondary_structure.create_edit_dict(sys.argv[1])
 
 for k,v in edit_dict.items():
     print(k,v)
