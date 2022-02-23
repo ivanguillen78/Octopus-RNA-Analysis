@@ -18,13 +18,10 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip
         pip3 install -r dependencies.txt
-    # - name: Analyzing code with Pylint
-    #   run: |
-    #     pylint $(git ls-files '*.py')
-      - name: SuperLinter
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: SuperLinter
+      uses: github/super-linter@v4
+      env:
+        VALIDATE_ALL_CODEBASE: false
+        DEFAULT_BRANCH: master
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
