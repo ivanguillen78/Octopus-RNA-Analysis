@@ -3,7 +3,7 @@ name: Pylint
 on: [push]
 
 jobs: 
-  Octopus-RNA-Analysis:
+  build:
     runs-on: ubuntu-latest
     strategy: 
       matrix:
@@ -18,6 +18,12 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip
         pip3 install -r dependencies.txt
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
     - name: Super-Linter
       uses: github/super-linter@v4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
