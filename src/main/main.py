@@ -3,9 +3,8 @@
 
 import sys
 
-from secondary_structure import create_edit_dict
+from secondary_structure import *
 
 edit_dict = create_edit_dict(sys.argv[1])
-
-for k, v in edit_dict.items():
-    print(k, v)
+score_dict = find_secondary_structures(edit_dict, sys.argv[2])
+create_output_csv("scores.csv", score_dict)

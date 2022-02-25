@@ -1,6 +1,8 @@
 >mRNA_molecule1
 ATCGATCGATCGATCGATCGGCACGTTCGATCCGTACTTAGAGCTAGATCCCCGCTGAGCTGGATCGTTTTTTGATCTAGCTCTAAGTACGGATCGAAGACATGAGGGGGATAGAATAAGACATAGACGATCGATCGATCGAT
 Editing site:                      ^                                      ATCTAGCTCTAAGTACGGATCGAAC
+                                                                         GATCTAGCTCTAAGTACGGATCGAA
+TTCGATCCGTACTTAGAGCTAGAT
 
 Full dot matrix:
 (((((((((((((((((........(((((((((((((((((((((((((.......................))))))))))))))))))))))))).............................))))))))))))))))
