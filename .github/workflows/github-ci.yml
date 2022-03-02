@@ -14,14 +14,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-  install_dependencies:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: |
-        python3 -m pip install --upgrade pip
-        pip3 install -r dependencies.txt
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip3 install -r dependencies.txt
     - name: Pytest
       run: |
         cd src/main/ && python3 -m pytest tests.py
