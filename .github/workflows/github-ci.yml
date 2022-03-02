@@ -34,5 +34,5 @@ jobs:
     - name: Pytest
       run: |
         pip3 install pytest
-        python3 -m pytest main/src/tests.py
+        python3 -m pytest src/main/tests.py
   
