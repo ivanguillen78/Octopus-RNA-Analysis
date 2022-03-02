@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import sys
 
 from secondary_structure import create_edit_dict, secondary_structure
 
@@ -24,7 +23,7 @@ def test_secondary_structure():
     # test right edge
     seq_3 = "AGCATGGCTAGCTAGCTGACTGCTAAAAGCTAGCTACGCTAGTGCCTGCAT"
     #        ...(((..........................................))^
-    pos_3 = [len(seq_3)-1]
+    pos_3 = [len(seq_3) - 1]
 
     seq_4 = "AGCTAGTCAGGCGGGACTCAAATCATGCATGAACATGATTTGTTTTCACGA"
     #        .....(^(......))).(^(((((((......))))))))).........
