@@ -6,7 +6,7 @@ import sys
 from secondary_structure import (
     create_edit_dict,
     create_output_csv,
-    find_secondary_structures
+    find_secondary_structures,
 )
 
 edit_dict = create_edit_dict(sys.argv[1])
