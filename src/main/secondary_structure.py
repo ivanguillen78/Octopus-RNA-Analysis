@@ -44,17 +44,13 @@ def secondary_structure(pos_list, sequence):
         left, right = pos, pos
         count = 0
         while count < 100:
-            new_str = sequence[:left] + sequence[right + 1 :]  # noqa: E203
+            new_str = sequence[:left] + sequence[right + 1 :]
             rev_comp = str(Seq(sequence[lo_:hi_]).reverse_complement())
-            if (
-                str(Seq(sequence[lo_ - 1 : hi_]).reverse_complement()) in new_str  # noqa: E203
-            ) and (
+            if (str(Seq(sequence[lo_ - 1 : hi_]).reverse_complement()) in new_str) and (
                 lo_ > 0
             ):
                 lo_ -= 1
-            if (
-                str(Seq(sequence[lo_ : hi_ + 1]).reverse_complement()) in new_str  # noqa: E203
-            ) and (
+            if (str(Seq(sequence[lo_ : hi_ + 1]).reverse_complement()) in new_str) and (
                 hi_ < len(sequence)
             ):
                 hi_ += 1
