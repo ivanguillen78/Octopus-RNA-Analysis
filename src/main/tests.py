@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-from secondary_structure import create_edit_dict, secondary_structure
+from gettext import find
+from secondary_structure import create_edit_dict, find_secondary_structures, secondary_structure
 
 
 def test_types():
@@ -38,3 +39,12 @@ def test_secondary_structure_multiple():
     #        .....(^(......))).(^(((((((......))))))))).........
     pos_4 = [6, 19]
     assert secondary_structure(pos_4, seq_4) == [3, 9]
+
+
+def test_create_score_dict():
+    edit_dict = create_edit_dict("../../data/testcsv.csv")
+    score_dict = find_secondary_structures(edit_dict, "../../data/testfasta.fasta")
+    test_score_dict = {"lcl|TRINITY_DN155104_c0_g1_i1:196-417": [5],
+                          "lcl|TRINITY_DN1563_c0_g1_i5:188-964": [5]}
+    assert score_dict == test_score_dict
+
