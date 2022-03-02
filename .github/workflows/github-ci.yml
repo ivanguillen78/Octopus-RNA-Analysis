@@ -27,4 +27,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FILTER_REGEX_INCLUDE: .*src/.*
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Pytest
+      run: |
+        python3 -m pytest main/src/tests.py
   

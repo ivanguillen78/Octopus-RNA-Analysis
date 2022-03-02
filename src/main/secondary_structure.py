@@ -38,6 +38,7 @@ def secondary_structure(pos_list, sequence):
     """
     len_list = []
     for pos in pos_list:
+        pos = pos + 1;
         lo_ = pos
         hi_ = pos + 1
         left, right = pos, pos
