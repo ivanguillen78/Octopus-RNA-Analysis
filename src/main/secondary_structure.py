@@ -38,17 +38,21 @@ def secondary_structure(pos_list, sequence):
     """
     len_list = []
     for pos in pos_list:
-        pos = pos + 1;
+        pos = pos + 1
         lo_ = pos
         hi_ = pos + 1
         left, right = pos, pos
         count = 0
-        while (count < 100):
-            new_str = sequence[:left] +  sequence[right+1:]
+        while count < 100:
+            new_str = sequence[:left] + sequence[right + 1 :]
             rev_comp = str(Seq(sequence[lo_:hi_]).reverse_complement())
-            if (str(Seq(sequence[lo_-1:hi_]).reverse_complement()) in new_str) and (lo_ > 0):
+            if (str(Seq(sequence[lo_ - 1 : hi_]).reverse_complement()) in new_str) and (
+                lo_ > 0
+            ):
                 lo_ -= 1
-            if (str(Seq(sequence[lo_:hi_+1]).reverse_complement()) in new_str) and (hi_ < len(sequence)):
+            if (str(Seq(sequence[lo_ : hi_ + 1]).reverse_complement()) in new_str) and (
+                hi_ < len(sequence)
+            ):
                 hi_ += 1
             if (left > 0) and (right < len(sequence)):
                 left -= 1
@@ -56,6 +60,7 @@ def secondary_structure(pos_list, sequence):
             count += 1
         len_list.append(len(rev_comp))
     return len_list
+
 
 def find_secondary_structures(edit_dict, fasta_file):
     """

@@ -9,6 +9,7 @@ def test_types():
     assert set(map(type, edit_dict)) == {str}
     assert set(map(type, edit_dict.values())) == {list}
 
+
 def test_secondary_structure():
     # test middle
     seq_1 = "AGCGTAGCTAGCTAGCTGACTGCTAGTAGCTAGCTACGCTAGTGCATGCAT"
@@ -26,7 +27,7 @@ def test_secondary_structure():
     pos_3 = [len(seq_3)-1]
 
     seq_4 = "AGCTAGTCAGGCGGGACTCAAATCATGCATGAACATGATTTGTTTTCACGA"
-    #        .....(^(......))).(^(((((((......)))))))))......... 
+    #        .....(^(......))).(^(((((((......))))))))).........
     pos_4 = [6, 19]
 
     assert secondary_structure(pos_1, seq_1) == [14]
