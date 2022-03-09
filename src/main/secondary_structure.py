@@ -28,6 +28,66 @@ def create_edit_dict(csv_file):
     return edit_dict
 
 
+def checkRight(sequence, pos):
+    """
+    Takes in:
+        - sequence (string)
+        - pos (int)
+    Returns:
+        - Largest reverse complement starting at pos and moving to the right (string)
+    """
+    lo, hi = pos, pos + 1
+    right = pos
+    if pos == len(sequence) - 1:
+        return sequence[pos]
+    while str(Seq(sequence[lo:hi]).reverse_complement()) in sequence:
+        new_str = sequence[:pos] + sequence[right + 1 :]
+        if str(Seq(sequence[lo : hi + 1]).reverse_complement()) in new_str and (
+            hi < len(new_str)
+        ):
+            hi += 1
+            right += 1
+        if str(Seq(sequence[lo : hi + 1]).reverse_complement()) not in new_str or (
+            hi >= len(new_str)
+        ):
+            return str(Seq(sequence[lo:hi]).reverse_complement())
+    return ""
+
+
+def checkLeft(sequence, pos):
+    """
+    Takes in:
+        - sequence (string)
+        - pos (int)
+    Returns:
+        - Largest reverse complement starting at pos and moving to the left (string)
+    """
+    lo, hi = pos, pos + 1
+    left = pos
+    rightSequence = checkRight(sequence, pos)
+    if pos == 0:
+        return sequence[pos]
+    while (
+        rightSequence[0 : len(rightSequence) - 1]
+        + str(Seq(sequence[lo:hi]).reverse_complement())
+        in sequence
+    ):
+        new_str = sequence[:left] + sequence[pos + 1 :]
+        if (
+            rightSequence[0 : len(rightSequence) - 1]
+            + str(Seq(sequence[lo - 1 : hi]).reverse_complement())
+            in new_str
+            and lo > -1
+        ):
+            lo -= 1
+            left -= 1
+        if rightSequence[0 : len(rightSequence) - 1] + str(
+            Seq(sequence[lo - 1 : hi]).reverse_complement()
+        ) not in new_str or (lo <= 0):
+            return str(Seq(sequence[lo:hi]).reverse_complement())
+    return ""
+
+
 def secondary_structure(pos_list, sequence):
     """
     Takes in:
@@ -38,27 +98,7 @@ def secondary_structure(pos_list, sequence):
     """
     len_list = []
     for pos in pos_list:
-        pos = pos + 1
-        lo_ = pos
-        hi_ = pos + 1
-        left, right = pos, pos
-        count = 0
-        while count < 100:
-            new_str = sequence[:left] + sequence[right + 1 :]
-            length = hi_ - lo_ 
-
-            if (str(Seq(sequence[lo_ - 1 : hi_]).reverse_complement()) in new_str) and (
-                lo_ > 0
-            ):
-                lo_ -= 1
-            if (str(Seq(sequence[lo_ : hi_ + 1]).reverse_complement()) in new_str) and (
-                hi_ < len(sequence)
-            ):
-                hi_ += 1
-            if (left > 0) and (right < len(sequence)):
-                left -= 1
-                right += 1
-            count += 1
+        length = len(checkRight(sequence, pos) + checkLeft(sequence, pos)) - 1
         len_list.append(length)
     return len_list
 
