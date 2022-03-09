@@ -4,7 +4,6 @@ from secondary_structure import (
     checkLeft,
     checkRight,
     create_edit_dict,
-    find_secondary_structures,
 )
 
 

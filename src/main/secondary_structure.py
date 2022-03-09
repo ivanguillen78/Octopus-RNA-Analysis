@@ -98,7 +98,7 @@ def secondary_structure(pos_list, sequence):
     """
     len_list = []
     for pos in pos_list:
-        length = len(checkRight(sequence, pos) + checkLeft(sequence, pos)) - 1
+        length = len(checkRight(sequence, pos + 1) + checkLeft(sequence, pos + 1)) - 1
         len_list.append(length)
     return len_list
 
