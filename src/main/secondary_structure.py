@@ -45,7 +45,8 @@ def secondary_structure(pos_list, sequence):
         count = 0
         while count < 100:
             new_str = sequence[:left] + sequence[right + 1 :]
-            rev_comp = str(Seq(sequence[lo_:hi_]).reverse_complement())
+            length = hi_ - lo_ 
+
             if (str(Seq(sequence[lo_ - 1 : hi_]).reverse_complement()) in new_str) and (
                 lo_ > 0
             ):
@@ -58,7 +59,7 @@ def secondary_structure(pos_list, sequence):
                 left -= 1
                 right += 1
             count += 1
-        len_list.append(len(rev_comp))
+        len_list.append(length)
     return len_list
 
 
