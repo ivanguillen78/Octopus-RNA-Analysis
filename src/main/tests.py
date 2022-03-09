@@ -46,12 +46,3 @@ def test_secondary_structure_multiple():
     assert len(checkRight(seq_4, pos_4a) + checkLeft(seq_4, pos_4a)) - 1 == 3
     assert len(checkRight(seq_4, pos_4b) + checkLeft(seq_4, pos_4b)) - 1 == 9
 
-
-def test_create_score_dict():
-    edit_dict = create_edit_dict("../../data/testcsv.csv")
-    score_dict = find_secondary_structures(edit_dict, "../../data/testfasta.fasta")
-    test_score_dict = {
-        "lcl|TRINITY_DN155104_c0_g1_i1:196-417": [5],
-        "lcl|TRINITY_DN1563_c0_g1_i5:188-964": [5],
-    }
-    assert score_dict == test_score_dict
