@@ -45,4 +45,3 @@ def test_secondary_structure_multiple():
     pos_4b = 19
     assert len(checkRight(seq_4, pos_4a) + checkLeft(seq_4, pos_4a)) - 1 == 3
     assert len(checkRight(seq_4, pos_4b) + checkLeft(seq_4, pos_4b)) - 1 == 9
-
