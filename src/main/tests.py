@@ -1,10 +1,6 @@
 #!/usr/bin/python
 
-from secondary_structure import (
-    checkLeft,
-    checkRight,
-    create_edit_dict,
-)
+from secondary_structure import checkLeft, checkRight, create_edit_dict
 
 
 def test_types():
