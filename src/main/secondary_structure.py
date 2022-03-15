@@ -41,13 +41,13 @@ def checkRight(sequence, pos):
     if pos == len(sequence) - 1:
         return sequence[pos]
     while str(Seq(sequence[lo:hi]).reverse_complement()) in sequence:
-        new_str = sequence[:pos] + sequence[right + 1 :]
-        if str(Seq(sequence[lo : hi + 1]).reverse_complement()) in new_str and (
+        new_str = sequence[:pos] + sequence[right + 1:]
+        if str(Seq(sequence[lo:hi + 1]).reverse_complement()) in new_str and (
             hi < len(new_str)
         ):
             hi += 1
             right += 1
-        if str(Seq(sequence[lo : hi + 1]).reverse_complement()) not in new_str or (
+        if str(Seq(sequence[lo:hi + 1]).reverse_complement()) not in new_str or (
             hi >= len(new_str)
         ):
             return str(Seq(sequence[lo:hi]).reverse_complement())
@@ -68,21 +68,21 @@ def checkLeft(sequence, pos):
     if pos == 0:
         return sequence[pos]
     while (
-        rightSequence[0 : len(rightSequence) - 1]
+        rightSequence[0:len(rightSequence) - 1]
         + str(Seq(sequence[lo:hi]).reverse_complement())
         in sequence
     ):
-        new_str = sequence[:left] + sequence[pos + 1 :]
+        new_str = sequence[:left] + sequence[pos + 1:]
         if (
-            rightSequence[0 : len(rightSequence) - 1]
-            + str(Seq(sequence[lo - 1 : hi]).reverse_complement())
+            rightSequence[0:len(rightSequence) - 1]
+            + str(Seq(sequence[lo - 1:hi]).reverse_complement())
             in new_str
             and lo > -1
         ):
             lo -= 1
             left -= 1
-        if rightSequence[0 : len(rightSequence) - 1] + str(
-            Seq(sequence[lo - 1 : hi]).reverse_complement()
+        if rightSequence[0:len(rightSequence) - 1] + str(
+            Seq(sequence[lo - 1:hi]).reverse_complement()
         ) not in new_str or (lo <= 0):
             return str(Seq(sequence[lo:hi]).reverse_complement())
     return ""
