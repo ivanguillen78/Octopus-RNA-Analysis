@@ -1,0 +1,5 @@
+```{r}
+data <- read.csv("minlengthoutput.csv", header = TRUE)
+dataAll <- read.csv("updated_scores.csv", header = TRUE)
+```
+

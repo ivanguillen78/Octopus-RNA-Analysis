@@ -6,7 +6,7 @@ from secondary_structure import checkLeft, checkRight, create_edit_dict
 def test_types():
     edit_dict = create_edit_dict("../../data/aes_profile.csv")
     assert set(map(type, edit_dict)) == {str}
-    assert set(map(type, edit_dict.values())) == {list}
+    assert set(map(type, edit_dict.values())) == {int}
 
 
 def test_secondary_structure_regular():

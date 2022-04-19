@@ -1,3 +1,4 @@
 biopython
 fastaparser
 pytest
+alive_progress

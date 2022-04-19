@@ -1,3 +1,0 @@
-orf,pos,mrna_con,gdna_reads,gdna_con,octo1_A,octo1_C,octo1_G,octo1_T,octo1_tot,octo2_A,octo2_C,octo2_G,octo2_T,octo2_tot,octo3_A,octo3_C,octo3_G,octo3_T,octo3_tot,octo4_A,octo4_C,octo4_G,octo4_T,octo4_tot,octo5_A,octo5_C,octo5_G,octo5_T,octo5_tot,octo6_A,octo6_C,octo6_G,octo6_T,octo6_tot,genomic_codon,genomic_amino,edited_codon,edited_amino,edited_pos_0based,upstream_base,downstream_base
-lcl|TRINITY_DN155104_c0_g1_i1:196-417,60,A,1,A,1,0,0,0,1,20,0,0,0,20,5,0,0,0,5,4,0,0,0,4,0,0,6,0,6,8,0,7,0,15,AAT,Asn,GAT,Asp,0,T,A
-lcl|TRINITY_DN1563_c0_g1_i5:188-964,234,G,21,G,0,0,8,0,8,7,0,121,0,128,0,0,18,0,18,0,0,54,0,54,2,0,18,0,20,8,0,189,0,197,GAA,Glu,AAA,Lys,0,C,A
