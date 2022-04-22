@@ -1,5 +1,9 @@
 ```{r}
-data <- read.csv("minlengthoutput.csv", header = TRUE)
-dataAll <- read.csv("updated_scores.csv", header = TRUE)
+cheatData <- read.csv("cheatoutput.csv", header = TRUE)
 ```
 
+```{r}
+table(cheatData$status)
+
+155/15688
+```

@@ -17,7 +17,7 @@ def test_secondary_structure_regular():
     assert len(checkRight(seq_1, pos_1) + checkLeft(seq_1, pos_1)) - 1 == 14
 
 
-def test_secondary_structure_left():
+def test_secondary_structure_leftedge():
     # test left edge
     seq_2 = "GCTAGCCAGCTAGCGCTACGTAGCATCGATCGTACGATGCATCGATCGATC"
     #        ^(((((..)))))).....................................
@@ -25,7 +25,7 @@ def test_secondary_structure_left():
     assert len(checkRight(seq_2, pos_2) + checkLeft(seq_2, pos_2)) - 1 == 6
 
 
-def test_secondary_structure_right():
+def test_secondary_structure_rightedge():
     # test right edge
     seq_3 = "AGTATGGCTAGCTAGCTGACTGCTAAAAGCTAGCTACGCTAGTGCCTGCAT"
     #        ...(((..........................................))^

@@ -26,64 +26,32 @@ def create_edit_dict(csv_file):
     return edit_dict
 
 
-def checkRight(sequence, pos):
-    """
-    Takes in:
-        - sequence (string)
-        - pos (int)
-    Returns:
-        - Largest reverse complement starting at pos and moving to the right (string)
-    """
-    lo, hi = pos, pos + 1
-    right = pos
-    if pos == len(sequence) - 1:
-        return sequence[pos]
-    while str(Seq(sequence[lo:hi]).reverse_complement()) in sequence:
-        new_str = sequence[:pos] + sequence[right + 1 :]
-        if str(Seq(sequence[lo : hi + 1]).reverse_complement()) in new_str and (
-            hi < len(new_str)
-        ):
-            hi += 1
+def return_leftmost_index(sequence, pos):
+    if (pos == 0):
+        return pos
+    left, right = pos, pos + 1
+    substr = str(Seq(sequence[left:right]).reverse_complement())
+    searchstring = sequence[:left] + sequence[right:]
+    while substr in searchstring and left >= 0:
+        left -= 1
+        substr = str(Seq(sequence[left:right]).reverse_complement())
+        searchstring = sequence[:left] + sequence[right:]
+    return left + 1
+
+def return_longest_rev_comp(sequence, original_pos, left_index):
+    substr_list = []
+    for index in range(left_index, original_pos + 1):
+        left, right = index, index + 1
+        substr = str(Seq(sequence[left:right]).reverse_complement())
+        searchstring = sequence[:left] + sequence[right:]
+        while substr in searchstring and right < len(sequence):
             right += 1
-        if str(Seq(sequence[lo : hi + 1]).reverse_complement()) not in new_str or (
-            hi >= len(new_str)
-        ):
-            return str(Seq(sequence[lo:hi]).reverse_complement())
-    return ""
-
-
-def checkLeft(sequence, pos):
-    """
-    Takes in:
-        - sequence (string)
-        - pos (int)
-    Returns:
-        - Largest reverse complement starting at pos and moving to the left (string)
-    """
-    lo, hi = pos, pos + 1
-    left = pos
-    rightSequence = checkRight(sequence, pos)
-    if pos == 0:
-        return sequence[pos]
-    while (
-        rightSequence[0 : len(rightSequence) - 1]
-        + str(Seq(sequence[lo:hi]).reverse_complement())
-        in sequence
-    ):
-        new_str = sequence[:left] + sequence[pos + 1 :]
-        if (
-            rightSequence[0 : len(rightSequence) - 1]
-            + str(Seq(sequence[lo - 1 : hi]).reverse_complement())
-            in new_str
-            and lo > -1
-        ):
-            lo -= 1
-            left -= 1
-        if rightSequence[0 : len(rightSequence) - 1] + str(
-            Seq(sequence[lo - 1 : hi]).reverse_complement()
-        ) not in new_str or (lo <= 0):
-            return str(Seq(sequence[lo:hi]).reverse_complement())
-    return ""
+            substr = str(Seq(sequence[left:right]).reverse_complement())
+            searchstring = sequence[:left] + sequence[right:]
+            if str(Seq(sequence[left:right+1]).reverse_complement()) not in searchstring:
+                break
+        substr_list.append(str(Seq(sequence[left:right]).reverse_complement()))
+    return max(enumerate(substr_list), key=lambda x: len(x[1]))
 
 
 def secondary_structure(sequence, pos):
@@ -96,15 +64,22 @@ def secondary_structure(sequence, pos):
         - sequence around edit site + location
         - reverse complement + location
     """
-    right = checkRight(sequence, pos)
-    left = checkLeft(sequence, pos)
-    length = len(right + left) - 1
-    rev_comp = right[0 : len(right) - 1] + left
-    base_string = str(Seq(rev_comp).reverse_complement())
-    rev_comp_loc_start = sequence.find(rev_comp)
+    leftindex = return_leftmost_index(sequence, pos)
+    rev_comp = return_longest_rev_comp(sequence, pos, leftindex)
+    length = len(rev_comp[1])
+    base_string = sequence[leftindex+rev_comp[0]:leftindex + rev_comp[0] + length - 1]
+    rev_comp_loc_start = sequence.find(rev_comp[1])
     rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
-    base_string_loc = [pos - len(left) + 1, pos + len(right) - 1]
-    return length, base_string, base_string_loc, rev_comp, rev_comp_loc
+    base_string_loc = [leftindex+rev_comp[0], leftindex+rev_comp[0]+length]
+    messedup = False
+    if (
+        rev_comp_loc[0] > base_string_loc[0] and rev_comp_loc[0] < base_string_loc[1]
+    ) or (
+        rev_comp_loc[1] > base_string_loc[0] and rev_comp_loc[1] < base_string_loc[1]
+    ):
+        messedup = True
+
+    return length, base_string, base_string_loc, rev_comp[1], rev_comp_loc, messedup
 
 
 def find_secondary_structures(edit_dict, fasta_file):
@@ -123,7 +98,7 @@ def find_secondary_structures(edit_dict, fasta_file):
             for seq in parser:
                 bar()
                 if seq.id in edit_dict:
-                    length, base, base_loc, rev, rev_loc = secondary_structure(
+                    length, base, base_loc, rev, rev_loc, status = secondary_structure(
                         seq.sequence_as_string(), edit_dict[seq.id]
                     )
                     output_list.append(
@@ -135,6 +110,7 @@ def find_secondary_structures(edit_dict, fasta_file):
                             "base_location": base_loc,
                             "rev_comp": rev,
                             "rev_comp_location": rev_loc,
+                            "status": status,
                         }
                     )
     fastafile.close()
@@ -158,6 +134,7 @@ def create_output_csv(file_name, score_list, minLength=5):
             "base_string_loc",
             "rev_comp",
             "rev_comp_loc",
+            "status",
         ]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -173,6 +150,7 @@ def create_output_csv(file_name, score_list, minLength=5):
                         "base_string_loc": item["base_location"],
                         "rev_comp": item["rev_comp"],
                         "rev_comp_loc": item["rev_comp_location"],
+                        "status": item["status"],
                     }
                 )
     csvfile.close()

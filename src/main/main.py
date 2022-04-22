@@ -11,19 +11,19 @@ from secondary_structure import (
 )
 
 parser = ArgumentParser(
-    description="Identify secondary structures in genetic sequence",
-    add_help=False
+    description="Identify secondary structures in genetic sequence", add_help=False
 )
-required = parser.add_argument_group('required arguemnts')
-optional = parser.add_argument_group('optional arguments')
+required = parser.add_argument_group("required arguemnts")
+optional = parser.add_argument_group("optional arguments")
 
 optional.add_argument(
-    '-h',
-    '--help',
-    action='help',
+    "-h",
+    "--help",
+    action="help",
     default=SUPPRESS,
-    help='show this help message and exit'
+    help="show this help message and exit",
 )
+
 
 def valid_file(extension, fileName):
     ext = os.path.splitext(fileName)[1][1:]
@@ -54,7 +54,7 @@ required.add_argument(
     type=lambda file: valid_file("csv", file),
     metavar="",
     required=True,
-    help="name of output csv file"
+    help="name of output csv file",
 )
 optional.add_argument(
     "-ml",
