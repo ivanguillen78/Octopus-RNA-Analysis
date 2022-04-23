@@ -1,9 +1,9 @@
 ```{r}
-cheatData <- read.csv("cheatoutput.csv", header = TRUE)
+newalgodata <- read.csv("newalgooutput.csv", header = TRUE)
 ```
 
 ```{r}
-table(cheatData$status)
+table(newalgodata$status)
 
 155/15688
 ```

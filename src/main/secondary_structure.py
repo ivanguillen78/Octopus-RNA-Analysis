@@ -68,18 +68,11 @@ def secondary_structure(sequence, pos):
     rev_comp = return_longest_rev_comp(sequence, pos, leftindex)
     length = len(rev_comp[1])
     base_string = sequence[leftindex+rev_comp[0]:leftindex + rev_comp[0] + length - 1]
-    rev_comp_loc_start = sequence.find(rev_comp[1])
-    rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
     base_string_loc = [leftindex+rev_comp[0], leftindex+rev_comp[0]+length]
-    messedup = False
-    if (
-        rev_comp_loc[0] > base_string_loc[0] and rev_comp_loc[0] < base_string_loc[1]
-    ) or (
-        rev_comp_loc[1] > base_string_loc[0] and rev_comp_loc[1] < base_string_loc[1]
-    ):
-        messedup = True
+    rev_comp_loc_start = sequence.find(rev_comp[1], base_string_loc[1]+1, len(sequence)-1)
+    rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
 
-    return length, base_string, base_string_loc, rev_comp[1], rev_comp_loc, messedup
+    return length, base_string, base_string_loc, rev_comp[1], rev_comp_loc
 
 
 def find_secondary_structures(edit_dict, fasta_file):
@@ -94,11 +87,11 @@ def find_secondary_structures(edit_dict, fasta_file):
     with open(fasta_file, encoding="utf8") as fastafile:
         size = int(len(fastafile.readlines()) / 2)
         parser = fastaparser.Reader(fastafile)
-        with alive_bar(size) as bar:
+        with alive_bar(size, bar='smooth', spinner='fish2') as bar:
             for seq in parser:
                 bar()
                 if seq.id in edit_dict:
-                    length, base, base_loc, rev, rev_loc, status = secondary_structure(
+                    length, base, base_loc, rev, rev_loc = secondary_structure(
                         seq.sequence_as_string(), edit_dict[seq.id]
                     )
                     output_list.append(
@@ -110,7 +103,6 @@ def find_secondary_structures(edit_dict, fasta_file):
                             "base_location": base_loc,
                             "rev_comp": rev,
                             "rev_comp_location": rev_loc,
-                            "status": status,
                         }
                     )
     fastafile.close()
@@ -134,7 +126,6 @@ def create_output_csv(file_name, score_list, minLength=5):
             "base_string_loc",
             "rev_comp",
             "rev_comp_loc",
-            "status",
         ]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -150,7 +141,6 @@ def create_output_csv(file_name, score_list, minLength=5):
                         "base_string_loc": item["base_location"],
                         "rev_comp": item["rev_comp"],
                         "rev_comp_loc": item["rev_comp_location"],
-                        "status": item["status"],
                     }
                 )
     csvfile.close()
