@@ -12,10 +12,7 @@ from Bio.Seq import Seq
 
 def create_edit_dict(csv_file):
     """
-    Takes in:
-        - csv file containing ids and edits.
-    Returns:
-        - edit_dict: ids as keys and list of edits as values.
+    Returns a dictionary with ids as keys and list of edits as values.
     """
     edit_dict = {}
     with open(csv_file, newline="", encoding="utf8") as csvfile:
@@ -27,6 +24,9 @@ def create_edit_dict(csv_file):
 
 
 def return_leftmost_index(sequence, pos):
+    """
+    Starts at given position and returns leftmost index.
+    """
     if (pos == 0):
         return pos
     left, right = pos, pos + 1
@@ -39,6 +39,9 @@ def return_leftmost_index(sequence, pos):
     return left + 1
 
 def return_longest_rev_comp(sequence, original_pos, left_index):
+    """
+    Starts at leftmost index and returns longest reverse complement.
+    """
     substr_list = []
     for index in range(left_index, original_pos + 1):
         left, right = index, index + 1
@@ -56,32 +59,35 @@ def return_longest_rev_comp(sequence, original_pos, left_index):
 
 def secondary_structure(sequence, pos):
     """
-    Takes in:
-        - pos: edit site
-        - sequence: genetic sequence corresponding to pos_list
-    Returns:
-        - length of reverse complement
-        - sequence around edit site + location
-        - reverse complement + location
+    Returns all information needed to create output csv file.
     """
+    messedup = False
     leftindex = return_leftmost_index(sequence, pos)
     rev_comp = return_longest_rev_comp(sequence, pos, leftindex)
     length = len(rev_comp[1])
-    base_string = sequence[leftindex+rev_comp[0]:leftindex + rev_comp[0] + length - 1]
-    base_string_loc = [leftindex+rev_comp[0], leftindex+rev_comp[0]+length]
-    rev_comp_loc_start = sequence.find(rev_comp[1], base_string_loc[1]+1, len(sequence)-1)
+    base_string = sequence[leftindex+rev_comp[0]:leftindex + rev_comp[0] + length]
+    base_string_loc = [leftindex+rev_comp[0], leftindex+rev_comp[0]+length-1]
+    rev_comp_loc_start = sequence.find(rev_comp[1])
     rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
+
+    if (
+         rev_comp_loc[0] > base_string_loc[0] and rev_comp_loc[0] < base_string_loc[1]
+     ) or (
+         rev_comp_loc[1] > base_string_loc[0] and rev_comp_loc[1] < base_string_loc[1]
+     ):
+         messedup = True
+
+    if messedup:
+        rev_comp_loc_start = sequence.find(rev_comp[1], base_string_loc[1]+1, len(sequence)-1)
+        rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
 
     return length, base_string, base_string_loc, rev_comp[1], rev_comp_loc
 
 
 def find_secondary_structures(edit_dict, fasta_file):
     """
-    Takes in:
-        - edit_dict: ids as keys and list of edits as values
-        - fasta_file: file containing all genetic sequences
-    Returns:
-        - score_dict: ids as keys and scores (length for now) as values
+    Iterates through edit dictionary and finds longest reverse complement
+    for each edit.
     """
     output_list = []
     with open(fasta_file, encoding="utf8") as fastafile:
@@ -111,11 +117,7 @@ def find_secondary_structures(edit_dict, fasta_file):
 
 def create_output_csv(file_name, score_list, minLength=5):
     """
-    Takes in:
-        - file_name: name of output csv file to be created
-        - score_dict: ids as keys and scores (length for now) as values
-    Creates:
-        - output csv file
+    Creates output csv file.
     """
     with open(file_name, "w", newline="", encoding="utf8") as csvfile:
         fieldnames = [
