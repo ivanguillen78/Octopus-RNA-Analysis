@@ -61,7 +61,6 @@ def secondary_structure(sequence, pos):
     """
     Returns all information needed to create output csv file.
     """
-    messedup = False
     leftindex = return_leftmost_index(sequence, pos)
     rev_comp = return_longest_rev_comp(sequence, pos, leftindex)
     length = len(rev_comp[1])
@@ -75,9 +74,6 @@ def secondary_structure(sequence, pos):
      ) or (
          rev_comp_loc[1] > base_string_loc[0] and rev_comp_loc[1] < base_string_loc[1]
      ):
-         messedup = True
-
-    if messedup:
         rev_comp_loc_start = sequence.find(rev_comp[1], base_string_loc[1]+1, len(sequence)-1)
         rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
 
