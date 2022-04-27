@@ -2,18 +2,20 @@
 """Main source file"""
 
 from argparse import ArgumentParser, SUPPRESS
-import os.path
+from alive_progress import alive_bar
+import fastaparser
 
-from secondary_structure import (
-    create_edit_dict,
-    create_output_csv,
-    find_secondary_structures,
-)
+
+from files import create_edit_dict, create_output_csv, valid_file
+from hairpin import create_secondary_structure_hairpin
+
+# from internal_loop import create_secondary_structure_loop
+
 
 parser = ArgumentParser(
     description="Identify secondary structures in genetic sequence", add_help=False
 )
-required = parser.add_argument_group("required arguemnts")
+required = parser.add_argument_group("required arguments")
 optional = parser.add_argument_group("optional arguments")
 
 optional.add_argument(
@@ -24,18 +26,10 @@ optional.add_argument(
     help="show this help message and exit",
 )
 
-
-def valid_file(extension, fileName):
-    ext = os.path.splitext(fileName)[1][1:]
-    if ext != extension:
-        parser.error("Your file must have the {} file extension".format(extension))
-    return fileName
-
-
 required.add_argument(
     "-f",
     "--fasta",
-    type=lambda file: valid_file("fasta", file),
+    type=lambda file: valid_file("fasta", file, parser),
     metavar="",
     required=True,
     help="fasta file containing genetic sequences",
@@ -43,7 +37,7 @@ required.add_argument(
 required.add_argument(
     "-c",
     "--csv",
-    type=lambda file: valid_file("csv", file),
+    type=lambda file: valid_file("csv", file, parser),
     metavar="",
     required=True,
     help="csv file containing edit positions",
@@ -51,7 +45,7 @@ required.add_argument(
 required.add_argument(
     "-of",
     "--outputFile",
-    type=lambda file: valid_file("csv", file),
+    type=lambda file: valid_file("csv", file, parser),
     metavar="",
     required=True,
     help="name of output csv file",
@@ -63,7 +57,58 @@ optional.add_argument(
     metavar="",
     help="minimum length of reverse complement (Default:5)",
 )
+optional.add_argument(
+    "-ll",
+    "--loopLength",
+    type=int,
+    metavar="",
+    help="max num of mismatches in loop (Default:1)",
+)
+optional.add_argument(
+    "-nl",
+    "--numLoops",
+    type=int,
+    metavar="",
+    help="max number of loops allowed in loop structure (Default:1)",
+)
 args = parser.parse_args()
+
+
+def find_secondary_structures(edit_dict, fasta_file):
+    """
+    Iterates through edit dictionary and finds longest reverse complement
+    for each edit.
+    """
+    output_list = []
+    with open(fasta_file, encoding="utf8") as fastafile:
+        size = int(len(fastafile.readlines()) / 2)
+        parser = fastaparser.Reader(fastafile)
+        with alive_bar(size, bar="smooth", spinner="fish2") as bar:
+            for seq in parser:
+                bar()
+                if seq.id in edit_dict:
+                    (
+                        length,
+                        base,
+                        base_loc,
+                        rev,
+                        rev_loc,
+                    ) = create_secondary_structure_hairpin(
+                        seq.sequence_as_string(), edit_dict[seq.id]
+                    )
+                    output_list.append(
+                        {
+                            "id": seq.id,
+                            "position": edit_dict[seq.id],
+                            "length": length,
+                            "base": base,
+                            "base_location": base_loc,
+                            "rev_comp": rev,
+                            "rev_comp_location": rev_loc,
+                        }
+                    )
+    fastafile.close()
+    return output_list
 
 
 def main():
