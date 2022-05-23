@@ -10,7 +10,10 @@ def create_edit_dict(csv_file):
     with open(csv_file, newline="", encoding="utf8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            edit_dict[row["orf"]] = int(row["pos"])
+            if row["orf"] not in edit_dict:
+                edit_dict[row["orf"]] = [int(row["pos"])]
+            else:
+                edit_dict[row["orf"]].append(int(row["pos"]))
     csvfile.close()
     return edit_dict
 

@@ -1,6 +1,12 @@
 from Bio.Seq import Seq
 
 
+def check_two_strings(substr, string1, string2):
+    if substr in string1 or substr in string2:
+        return True
+    return False
+
+
 def return_leftmost_index_hairpin(sequence, pos):
     """
     Starts at given position and returns leftmost index.
@@ -9,40 +15,68 @@ def return_leftmost_index_hairpin(sequence, pos):
         return pos
     left, right = pos, pos + 1
     substr = sequence[left:right]
-    searchstring = sequence[:left] + sequence[right:]
-    while str(Seq(substr).reverse_complement()) in searchstring and left >= 0:
+    while (
+        check_two_strings(
+            str(Seq(substr).reverse_complement()), sequence[:left], sequence[right:]
+        )
+    ) and left >= 0:
         if (
-            str(Seq(sequence[left - 1 : right]).reverse_complement())
-            not in searchstring
+            not (
+                check_two_strings(
+                    str(Seq(sequence[left - 1 : right]).reverse_complement()),
+                    sequence[:left],
+                    sequence[right:],
+                )
+            )
             or left == 0
         ):
             break
         left -= 1
         substr = sequence[left:right]
-        searchstring = sequence[:left] + sequence[right:]
     return left
 
 
-def return_longest_rev_comp_hairpin(sequence, position, left_index):
+def return_rightmost_index_hairpin(sequence, left, right):
     """
-    Starts at leftmost index and returns longest reverse complement.
+    Starts at given position and returns rightmost index.
     """
-    substr_list = []
-    for index in range(left_index, position + 1):
-        left, right = index, index + 1
-        substr = str(Seq(sequence[left:right]).reverse_complement())
-        searchstring = sequence[:left] + sequence[right:]
-        while substr in searchstring and right < len(sequence):
-            right += 1
-            substr = str(Seq(sequence[left:right]).reverse_complement())
-            searchstring = sequence[:left] + sequence[right:]
-            if (
-                str(Seq(sequence[left : right + 1]).reverse_complement())
-                not in searchstring
-            ):
-                break
-        substr_list.append(str(Seq(sequence[left:right]).reverse_complement()))
-    return max(enumerate(substr_list), key=lambda x: len(x[1]))
+    if right == len(sequence) - 1:
+        return right
+    substr = sequence[left:right]
+    while (
+        check_two_strings(
+            str(Seq(substr).reverse_complement()), sequence[:left], sequence[right:]
+        )
+    ) and right < len(sequence):
+        if (
+            not (
+                check_two_strings(
+                    str(Seq(sequence[left: right+1]).reverse_complement()),
+                    sequence[:left],
+                    sequence[right:],
+                )
+            )
+            or right == len(sequence) - 1
+        ):
+            break
+        right += 1
+        substr = sequence[left:right]
+    return right
+
+def return_longest_hairpin(sequence, position, left_index):
+    left = left_index
+    right = return_rightmost_index_hairpin(sequence, left_index, position+1)
+    longest = sequence[left_index:right]
+    for index in range(left_index + 1, position + 1):
+        if right + 1 >= len(sequence):
+            break
+        if not check_two_strings(str(Seq(sequence[index: right+1]).reverse_complement()), sequence[:index], sequence[right+1:]):
+            continue
+        right = return_rightmost_index_hairpin(sequence, index, right + 1)
+        if len(sequence[index:right]) > len(longest):
+            longest = sequence[index:right]
+            left = index
+    return [str(Seq(longest).reverse_complement()), left]
 
 
 def create_secondary_structure_hairpin(sequence, pos):
@@ -50,11 +84,12 @@ def create_secondary_structure_hairpin(sequence, pos):
     Returns all information needed to create output csv file.
     """
     leftindex = return_leftmost_index_hairpin(sequence, pos)
-    rev_comp = return_longest_rev_comp_hairpin(sequence, pos, leftindex)
-    length = len(rev_comp[1])
-    base_string = sequence[leftindex + rev_comp[0] : leftindex + rev_comp[0] + length]
-    base_string_loc = [leftindex + rev_comp[0], leftindex + rev_comp[0] + length - 1]
-    rev_comp_loc_start = sequence.find(rev_comp[1])
+    structure = return_longest_hairpin(sequence, pos, leftindex)
+    rev_comp = structure[0]
+    length = len(rev_comp)
+    base_string = sequence[structure[1] : structure[1] + length]
+    base_string_loc = [structure[1], structure[1] + length - 1]
+    rev_comp_loc_start = sequence.find(rev_comp)
     rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
 
     if (
@@ -63,8 +98,8 @@ def create_secondary_structure_hairpin(sequence, pos):
         rev_comp_loc[1] >= base_string_loc[0] and rev_comp_loc[1] <= base_string_loc[1]
     ):
         rev_comp_loc_start = sequence.find(
-            rev_comp[1], base_string_loc[1] + 1, len(sequence) - 1
+            rev_comp, base_string_loc[1] + 1, len(sequence) - 1
         )
         rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
 
-    return length, base_string, base_string_loc, rev_comp[1], rev_comp_loc
+    return length, base_string, base_string_loc, rev_comp, rev_comp_loc

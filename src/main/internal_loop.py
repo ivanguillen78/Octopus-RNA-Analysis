@@ -8,17 +8,6 @@ from Bio.Seq import Seq
 import re
 
 
-def return_leftmost_index_loop(sequence, pos, maxLengthOfLoop=1, numLoops=1):
-    """
-    Starts at given position and returns leftmost index for internal loops
-    """
-    if pos == 0:
-        return pos
-    left, right = pos, pos + 1
-    substr = sequence[left:right]
-    searchstring = sequence[:left] + sequence[right:]
-
-
 def return_longest_rev_comp_loop(
     sequence, original_pos, left_index, maxLengthOfLoop=1, numLoops=1
 ):
@@ -39,7 +28,7 @@ def return_longest_rev_comp_loop(
             str(Seq(substr).reverse_complement()), searchstring
         ) and right < len(sequence):
             checking = checkInternalLoop(
-                substr, maxLengthOfLoop, sequence, right, searchstring
+                substr, maxLengthOfLoop, sequence, right, searchstring, "right"
             )
             if re.search(
                 str(Seq(substr + addition).reverse_complement()), searchstring
@@ -56,8 +45,9 @@ def return_longest_rev_comp_loop(
                 substr = substr + ("." * checking[1]) + addition
                 searchstring = sequence[:left] + sequence[right + checking[1] :]
                 loopsLeft -= 1
-                right += 1
-                addition = sequence[right]
+                if right < len(sequence) - 1:
+                    right += 1
+                    addition = sequence[right]
             else:
                 break
         substr_list.append(substr)
@@ -75,11 +65,11 @@ def return_leftmost_index_loop(sequence, pos, maxLengthOfLoop=1, numLoops=1):
     searchstring = sequence[: index + 1] + sequence[right:]
     loopsLeft = numLoops
     addition = sequence[index]
-    while re.search(substr, searchstring) and index >= 0:
+    while re.search(str(Seq(substr).reverse_complement()), searchstring) and index >= 0:
         checking = checkInternalLoop(
             substr, maxLengthOfLoop, sequence, index, searchstring, "left"
         )
-        if re.search(addition + substr, searchstring):
+        if re.search(str(Seq(addition + substr).reverse_complement()), searchstring):
             index -= 1
             substr = addition + substr
             if index == 0:
@@ -102,15 +92,14 @@ def return_leftmost_index_loop(sequence, pos, maxLengthOfLoop=1, numLoops=1):
 def checkInternalLoop(substr, maxLength, sequence, index, searchstring, type):
     if type == "right":
         for i in range(1, maxLength + 1):
-            if re.search(
-                str(substr + ("." * i) + sequence[index + i]),
-                searchstring,
-            ):
-                return (True, i)
+            if index + i < len(sequence):
+                if re.search(str(Seq(substr + ("." * i) + sequence[index + i]).reverse_complement()), searchstring):
+                    return (True, i)
     if type == "left":
         for i in range(1, maxLength + 1):
-            if re.search(sequence[index - i] + ("." * i) + substr, searchstring):
-                return (True, i)
+            if index - i >= 0:
+                if re.search(str(Seq(sequence[index - i] + ("." * i) + substr).reverse_complement()), searchstring):
+                    return (True, i)
     return (False, -1)
 
 
@@ -119,21 +108,23 @@ def create_secondary_structure_loop(sequence, pos):
     Returns all information needed to create output csv file (internal loops)
     """
     leftindex = return_leftmost_index_loop(sequence, pos)
-    rev_comp = return_longest_rev_comp_loop(sequence, pos, leftindex)
-    length = len(rev_comp[1])
-    base_string = sequence[leftindex + rev_comp[0] : leftindex + rev_comp[0] + length]
-    base_string_loc = [leftindex + rev_comp[0], leftindex + rev_comp[0] + length - 1]
-    rev_comp_loc_start = re.search(rev_comp[1], sequence)
-    rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
+    structure = return_longest_rev_comp_loop(sequence, pos, leftindex)
+    rev_comp = str(Seq(structure[1]).reverse_complement())
+    length = len(rev_comp)
+    base_string = structure[1]
+    base_string_loc = [leftindex + structure[0], leftindex + structure[0] + length - 1]
+    rev_comp_loc = [0, 0]
+    loc = re.search(rev_comp, sequence)
+    if loc:
+        rev_comp_loc = [loc.start(), loc.end()]
+    # if (
+    #     rev_comp_loc[0] >= base_string_loc[0] and rev_comp_loc[0] <= base_string_loc[1]
+    # ) or (
+    #     rev_comp_loc[1] >= base_string_loc[0] and rev_comp_loc[1] <= base_string_loc[1]
+    # ):
+    #     rev_comp_loc_start = sequence.find(
+    #         rev_comp[1], base_string_loc[1] + 1, len(sequence) - 1
+    #     )
+    #     rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
 
-    if (
-        rev_comp_loc[0] >= base_string_loc[0] and rev_comp_loc[0] <= base_string_loc[1]
-    ) or (
-        rev_comp_loc[1] >= base_string_loc[0] and rev_comp_loc[1] <= base_string_loc[1]
-    ):
-        rev_comp_loc_start = sequence.find(
-            rev_comp[1], base_string_loc[1] + 1, len(sequence) - 1
-        )
-        rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
-
-    return length, base_string, base_string_loc, rev_comp[1], rev_comp_loc
+    return length, base_string, base_string_loc, rev_comp, rev_comp_loc

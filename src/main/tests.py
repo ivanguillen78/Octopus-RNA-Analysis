@@ -5,7 +5,7 @@
 from files import create_edit_dict
 from hairpin import (
     return_leftmost_index_hairpin,
-    return_longest_rev_comp_hairpin,
+    return_longest_hairpin,
     create_secondary_structure_hairpin,
 )
 
@@ -30,7 +30,7 @@ def test_longest_rev_comp_hairpin_regular():
     #        (((((^((((((((............))))))))))))))...........
     pos_1 = 5
     leftindex = return_leftmost_index_hairpin(seq_1, pos_1)
-    assert len(return_longest_rev_comp_hairpin(seq_1, pos_1, leftindex)[1]) == 14
+    assert len(return_longest_hairpin(seq_1, pos_1, leftindex)[0]) == 14
 
 
 def test_create_sec_struct_hairpin_regular():
@@ -62,7 +62,7 @@ def test_longest_rev_comp_hairpin_leftedge():
     #        ^(((((..)))))).....................................
     pos_2 = 0
     leftindex = return_leftmost_index_hairpin(seq_2, pos_2)
-    assert len(return_longest_rev_comp_hairpin(seq_2, pos_2, leftindex)[1]) == 6
+    assert len(return_longest_hairpin(seq_2, pos_2, leftindex)[0]) == 6
 
 
 def test_create_sec_struct_hairpin_leftedge():
@@ -95,7 +95,7 @@ def test_longest_rev_comp_hairpin_rightedge():
     #        ...(((..........................................))^
     pos_3 = 50
     leftindex = return_leftmost_index_hairpin(seq_3, pos_3)
-    assert len(return_longest_rev_comp_hairpin(seq_3, pos_3, leftindex)[1]) == 3
+    assert len(return_longest_hairpin(seq_3, pos_3, leftindex)[0]) == 3
 
 
 def test_create_sec_struct_hairpin_rightedge():

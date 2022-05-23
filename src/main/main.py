@@ -8,8 +8,7 @@ import fastaparser
 
 from files import create_edit_dict, create_output_csv, valid_file
 from hairpin import create_secondary_structure_hairpin
-
-# from internal_loop import create_secondary_structure_loop
+from internal_loop import create_secondary_structure_loop
 
 
 parser = ArgumentParser(
@@ -81,32 +80,43 @@ def find_secondary_structures(edit_dict, fasta_file):
     """
     output_list = []
     with open(fasta_file, encoding="utf8") as fastafile:
-        size = int(len(fastafile.readlines()) / 2)
+        edit_dict_size = 0
+        for edit in edit_dict:
+            edit_dict_size += len(edit_dict[edit])
+        numSequences = int(len(fastafile.readlines()) / 2)
         parser = fastaparser.Reader(fastafile)
-        with alive_bar(size, bar="smooth", spinner="fish2") as bar:
+        sequence_dict = {}
+        print("Preparing data")
+        with alive_bar(numSequences, bar="smooth", spinner="fish2") as bar:
             for seq in parser:
                 bar()
-                if seq.id in edit_dict:
-                    (
-                        length,
-                        base,
-                        base_loc,
-                        rev,
-                        rev_loc,
-                    ) = create_secondary_structure_hairpin(
-                        seq.sequence_as_string(), edit_dict[seq.id]
-                    )
-                    output_list.append(
-                        {
-                            "id": seq.id,
-                            "position": edit_dict[seq.id],
-                            "length": length,
-                            "base": base,
-                            "base_location": base_loc,
-                            "rev_comp": rev,
-                            "rev_comp_location": rev_loc,
-                        }
-                    )
+                sequence_dict[seq.id] = seq.sequence_as_string()
+        print("Data preparation complete. Locating secondary structures.")
+        with alive_bar(edit_dict_size, bar="smooth", spinner="fish2") as bar:
+            for edit in edit_dict:
+                if edit in sequence_dict:
+                    for pos in edit_dict[edit]:
+                        bar()
+                        (
+                            length,
+                            base,
+                            base_loc,
+                            rev,
+                            rev_loc,
+                        ) = create_secondary_structure_loop(
+                            sequence_dict[edit], pos
+                        )
+                        output_list.append(
+                            {
+                                "id": edit,
+                                "position": pos,
+                                "length": length,
+                                "base": base,
+                                "base_location": base_loc,
+                                "rev_comp": rev,
+                                "rev_comp_location": rev_loc,
+                            }
+                        )
     fastafile.close()
     return output_list
 
