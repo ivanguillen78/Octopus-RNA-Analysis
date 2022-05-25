@@ -93,12 +93,26 @@ def checkInternalLoop(substr, maxLength, sequence, index, searchstring, type):
     if type == "right":
         for i in range(1, maxLength + 1):
             if index + i < len(sequence):
-                if re.search(str(Seq(substr + ("." * i) + sequence[index + i]).reverse_complement()), searchstring):
+                if re.search(
+                    str(
+                        Seq(
+                            substr + ("." * i) + sequence[index + i]
+                        ).reverse_complement()
+                    ),
+                    searchstring,
+                ):
                     return (True, i)
     if type == "left":
         for i in range(1, maxLength + 1):
             if index - i >= 0:
-                if re.search(str(Seq(sequence[index - i] + ("." * i) + substr).reverse_complement()), searchstring):
+                if re.search(
+                    str(
+                        Seq(
+                            sequence[index - i] + ("." * i) + substr
+                        ).reverse_complement()
+                    ),
+                    searchstring,
+                ):
                     return (True, i)
     return (False, -1)
 
@@ -116,15 +130,14 @@ def create_secondary_structure_loop(sequence, pos):
     rev_comp_loc = [0, 0]
     loc = re.search(rev_comp, sequence)
     if loc:
-        rev_comp_loc = [loc.start(), loc.end()]
-    # if (
-    #     rev_comp_loc[0] >= base_string_loc[0] and rev_comp_loc[0] <= base_string_loc[1]
-    # ) or (
-    #     rev_comp_loc[1] >= base_string_loc[0] and rev_comp_loc[1] <= base_string_loc[1]
-    # ):
-    #     rev_comp_loc_start = sequence.find(
-    #         rev_comp[1], base_string_loc[1] + 1, len(sequence) - 1
-    #     )
-    #     rev_comp_loc = [rev_comp_loc_start, rev_comp_loc_start + length - 1]
+        rev_comp_loc = [loc.start(), loc.end() - 1]
+    if (
+        rev_comp_loc[0] >= base_string_loc[0] and rev_comp_loc[0] <= base_string_loc[1]
+    ) or (
+        rev_comp_loc[1] >= base_string_loc[0] and rev_comp_loc[1] <= base_string_loc[1]
+    ):
+        loc = re.search(rev_comp, sequence[pos + 1 :])
+        if loc:
+            rev_comp_loc = [loc.start(), loc.end() - 1]
 
     return length, base_string, base_string_loc, rev_comp, rev_comp_loc

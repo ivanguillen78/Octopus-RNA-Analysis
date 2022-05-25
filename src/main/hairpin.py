@@ -51,7 +51,7 @@ def return_rightmost_index_hairpin(sequence, left, right):
         if (
             not (
                 check_two_strings(
-                    str(Seq(sequence[left: right+1]).reverse_complement()),
+                    str(Seq(sequence[left : right + 1]).reverse_complement()),
                     sequence[:left],
                     sequence[right:],
                 )
@@ -63,14 +63,19 @@ def return_rightmost_index_hairpin(sequence, left, right):
         substr = sequence[left:right]
     return right
 
+
 def return_longest_hairpin(sequence, position, left_index):
     left = left_index
-    right = return_rightmost_index_hairpin(sequence, left_index, position+1)
+    right = return_rightmost_index_hairpin(sequence, left_index, position + 1)
     longest = sequence[left_index:right]
     for index in range(left_index + 1, position + 1):
         if right + 1 >= len(sequence):
             break
-        if not check_two_strings(str(Seq(sequence[index: right+1]).reverse_complement()), sequence[:index], sequence[right+1:]):
+        if not check_two_strings(
+            str(Seq(sequence[index : right + 1]).reverse_complement()),
+            sequence[:index],
+            sequence[right + 1 :],
+        ):
             continue
         right = return_rightmost_index_hairpin(sequence, index, right + 1)
         if len(sequence[index:right]) > len(longest):

@@ -103,9 +103,7 @@ def find_secondary_structures(edit_dict, fasta_file):
                             base_loc,
                             rev,
                             rev_loc,
-                        ) = create_secondary_structure_loop(
-                            sequence_dict[edit], pos
-                        )
+                        ) = create_secondary_structure_loop(sequence_dict[edit], pos)
                         output_list.append(
                             {
                                 "id": edit,
