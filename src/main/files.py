@@ -60,3 +60,10 @@ def valid_file(extension, fileName, parser):
             + " must have the {} file extension".format(extension)
         )
     return fileName
+
+
+def valid_struct(structType, parser):
+    valid_structs = ["hairpin", "int_loop", "bulge"]
+    if structType not in valid_structs:
+        parser.error("Invalid structure type. Include argument -h for additional help.")
+    return structType

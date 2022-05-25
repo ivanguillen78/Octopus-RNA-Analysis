@@ -5,7 +5,8 @@ from argparse import SUPPRESS, ArgumentParser
 
 import fastaparser
 from alive_progress import alive_bar
-from files import create_edit_dict, create_output_csv, valid_file
+from files import create_edit_dict, create_output_csv, valid_file, valid_struct
+from hairpin import create_secondary_structure_hairpin
 from internal_loop import create_secondary_structure_loop
 
 parser = ArgumentParser(
@@ -46,6 +47,14 @@ required.add_argument(
     required=True,
     help="name of output csv file",
 )
+required.add_argument(
+    "-st",
+    "--structType",
+    type=lambda struct: valid_struct(struct, parser),
+    metavar="",
+    required=True,
+    help="type of structure ('hairpin'|'int_loop'|'bulge')",
+)
 optional.add_argument(
     "-ml",
     "--minLength",
@@ -70,11 +79,13 @@ optional.add_argument(
 args = parser.parse_args()
 
 
-def find_secondary_structures(edit_dict, fasta_file, maxLengthOfLoop=1, numLoops=1):
+def find_secondary_structures(edit_dict, fasta_file):
     """
     Iterates through edit dictionary and finds longest reverse complement
     for each edit.
     """
+    args.loopLength = args.loopLength if args.loopLength != None else 1
+    args.numLoops = args.numLoops if args.numLoops != None else 1
     output_list = []
     with open(fasta_file, encoding="utf8") as fastafile:
         edit_dict_size = 0
@@ -94,15 +105,28 @@ def find_secondary_structures(edit_dict, fasta_file, maxLengthOfLoop=1, numLoops
                 if edit in sequence_dict:
                     for pos in edit_dict[edit]:
                         bar()
-                        (
-                            length,
-                            base,
-                            base_loc,
-                            rev,
-                            rev_loc,
-                        ) = create_secondary_structure_loop(
-                            sequence_dict[edit], pos, maxLengthOfLoop, numLoops
-                        )
+                        if args.structType == "hairpin":
+                            (
+                                length,
+                                base,
+                                base_loc,
+                                rev,
+                                rev_loc,
+                            ) = create_secondary_structure_hairpin(
+                                sequence_dict[edit], pos
+                            )
+                        elif args.structType == "int_loop":
+                            (
+                                length,
+                                base,
+                                base_loc,
+                                rev,
+                                rev_loc,
+                            ) = create_secondary_structure_loop(
+                                sequence_dict[edit], pos, args.loopLength, args.numLoops
+                            )
+                        else:
+                            pass
                         output_list.append(
                             {
                                 "id": edit,

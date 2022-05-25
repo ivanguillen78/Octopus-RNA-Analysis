@@ -1,10 +1,9 @@
 ```{r}
 #hairpindata <- read.csv("output.csv", header = TRUE)
 #loopdata <- read.csv("output_loop_test.csv", header = TRUE)
-loopdatafixed <- read.csv("output_loop_test2.csv", header = TRUE)
+loopdatafixed <- read.csv("output_hairpin.csv", header = TRUE)
 ```
 
 ```{r}
-table(hairpindata$length)
-table(loopdata$length)
+table(loopdatafixed$length)
 ```
