@@ -73,7 +73,7 @@ optional.add_argument(
 args = parser.parse_args()
 
 
-def find_secondary_structures(edit_dict, fasta_file):
+def find_secondary_structures(edit_dict, fasta_file, maxLengthOfLoop=1, numLoops=1):
     """
     Iterates through edit dictionary and finds longest reverse complement
     for each edit.
@@ -103,7 +103,9 @@ def find_secondary_structures(edit_dict, fasta_file):
                             base_loc,
                             rev,
                             rev_loc,
-                        ) = create_secondary_structure_loop(sequence_dict[edit], pos)
+                        ) = create_secondary_structure_loop(
+                            sequence_dict[edit], pos, maxLengthOfLoop, numLoops
+                        )
                         output_list.append(
                             {
                                 "id": edit,

@@ -117,12 +117,14 @@ def checkInternalLoop(substr, maxLength, sequence, index, searchstring, type):
     return (False, -1)
 
 
-def create_secondary_structure_loop(sequence, pos):
+def create_secondary_structure_loop(sequence, pos, maxLengthOfLoop=1, numLoops=1):
     """
     Returns all information needed to create output csv file (internal loops)
     """
-    leftindex = return_leftmost_index_loop(sequence, pos)
-    structure = return_longest_rev_comp_loop(sequence, pos, leftindex)
+    leftindex = return_leftmost_index_loop(sequence, pos, maxLengthOfLoop, numLoops)
+    structure = return_longest_rev_comp_loop(
+        sequence, pos, leftindex, maxLengthOfLoop, numLoops
+    )
     rev_comp = str(Seq(structure[1]).reverse_complement())
     length = len(rev_comp)
     base_string = structure[1]

@@ -33,5 +33,5 @@ jobs:
         pip3 install -r dependencies.txt
     - name: Pytest
       run: |
-        cd src/main/ && python3 -m pytest test_ss.py
+        cd src/main/ && python3 -m pytest tests.py
   
