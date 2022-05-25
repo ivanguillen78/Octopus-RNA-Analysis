@@ -1,6 +1,4 @@
 ```{r}
-#hairpindata <- read.csv("output.csv", header = TRUE)
-#loopdata <- read.csv("output_loop_test.csv", header = TRUE)
 loopdatafixed <- read.csv("output_hairpin.csv", header = TRUE)
 ```
 
