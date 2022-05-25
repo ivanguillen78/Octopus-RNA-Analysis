@@ -2,8 +2,9 @@
 """Main source file"""
 
 from argparse import SUPPRESS, ArgumentParser
-from alive_progress import alive_bar
+
 import fastaparser
+from alive_progress import alive_bar
 from files import create_edit_dict, create_output_csv, valid_file
 from hairpin import create_secondary_structure_hairpin
 from internal_loop import create_secondary_structure_loop

@@ -4,8 +4,9 @@ Identifying secondary structures given
     - FASTA file of genetic sequences
     - CSV file with potential edit sites
 """
-from Bio.Seq import Seq
 import re
+
+from Bio.Seq import Seq
 
 
 def return_longest_rev_comp_loop(
