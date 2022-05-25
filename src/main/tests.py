@@ -4,15 +4,15 @@
 
 from files import create_edit_dict
 from hairpin import (
+    create_secondary_structure_hairpin,
     return_leftmost_index_hairpin,
     return_longest_hairpin,
-    create_secondary_structure_hairpin,
 )
 from internal_loop import (
-    return_leftmost_index_loop,
-    return_longest_rev_comp_loop,
     checkInternalLoop,
     create_secondary_structure_loop,
+    return_leftmost_index_loop,
+    return_longest_rev_comp_loop,
 )
 
 

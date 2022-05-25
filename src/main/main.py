@@ -1,15 +1,12 @@
 #!/usr/bin/python
 """Main source file"""
 
-from argparse import ArgumentParser, SUPPRESS
+from argparse import SUPPRESS, ArgumentParser
 from alive_progress import alive_bar
 import fastaparser
-
-
 from files import create_edit_dict, create_output_csv, valid_file
 from hairpin import create_secondary_structure_hairpin
 from internal_loop import create_secondary_structure_loop
-
 
 parser = ArgumentParser(
     description="Identify secondary structures in genetic sequence", add_help=False
