@@ -5,6 +5,7 @@ from argparse import SUPPRESS, ArgumentParser
 
 import fastaparser
 from alive_progress import alive_bar
+from bulge import create_secondary_structure_bulge
 from files import create_edit_dict, create_output_csv, valid_file, valid_struct
 from hairpin import create_secondary_structure_hairpin
 from internal_loop import create_secondary_structure_loop
@@ -76,6 +77,20 @@ optional.add_argument(
     metavar="",
     help="max number of loops allowed in loop structure (Default:1)",
 )
+optional.add_argument(
+    "-bl",
+    "--bulgeLength",
+    type=int,
+    metavar="",
+    help="max num of mismatches in loop (Default:1)",
+)
+optional.add_argument(
+    "-nb",
+    "--numBulges",
+    type=int,
+    metavar="",
+    help="max number of loops allowed in loop structure (Default:1)",
+)
 args = parser.parse_args()
 
 
@@ -86,6 +101,8 @@ def find_secondary_structures(edit_dict, fasta_file):
     """
     args.loopLength = args.loopLength if args.loopLength != None else 1
     args.numLoops = args.numLoops if args.numLoops != None else 1
+    args.bulgeLength = args.bulgeLength if args.bulgeLength != None else 1
+    args.numBulges = args.numBulges if args.numBulges != None else 1
     output_list = []
     with open(fasta_file, encoding="utf8") as fastafile:
         edit_dict_size = 0
@@ -123,10 +140,24 @@ def find_secondary_structures(edit_dict, fasta_file):
                                 rev,
                                 rev_loc,
                             ) = create_secondary_structure_loop(
-                                sequence_dict[edit], pos, args.loopLength, args.numLoops
+                                sequence_dict[edit],
+                                pos,
+                                args.loopLength,
+                                args.numBulges,
                             )
                         else:
-                            pass
+                            (
+                                length,
+                                base,
+                                base_loc,
+                                rev,
+                                rev_loc,
+                            ) = create_secondary_structure_bulge(
+                                sequence_dict[edit],
+                                pos,
+                                args.bulgeLength,
+                                args.numLoops,
+                            )
                         output_list.append(
                             {
                                 "id": edit,
