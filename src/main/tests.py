@@ -2,25 +2,38 @@
 
 # from files import create_edit_dict
 
-from files import create_edit_dict
+from argparse import SUPPRESS, ArgumentParser
+from files import create_edit_dict, valid_file
 from hairpin import (
     create_secondary_structure_hairpin,
     return_leftmost_index_hairpin,
     return_longest_hairpin,
 )
 from internal_loop import (
-    checkInternalLoop,
     create_secondary_structure_loop,
     return_leftmost_index_loop,
     return_longest_rev_comp_loop,
 )
 
 
+"""
+File tests
+"""
+
 def test_edit_dict_types():
     edit_dict = create_edit_dict("../../data/aes_profile.csv")
     assert set(map(type, edit_dict)) == {str}
     assert set(map(type, edit_dict.values())) == {list}
 
+
+def test_valid_file():
+    testparser = ArgumentParser(
+        description="Parser created for testing valid file extensions", add_help=False
+    )
+    testfile1 = "testfile.csv"
+    testfile2 = "testfile.fasta"
+    assert valid_file("csv", testfile1, testparser) == testfile1
+    assert valid_file("fasta", testfile2, testparser) == testfile2
 
 """
 HAIRPIN TESTS
