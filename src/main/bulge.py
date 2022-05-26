@@ -128,13 +128,13 @@ def check_bulge_base(substr, maxLength, sequence, index, searchstring, type):
                 ):
                     return (True, i)
     if type == "left":
-        for i in range(1, maxLength + 1):
-            if index - i >= 0:
+        for j in range(1, maxLength + 1):
+            if index - j >= 0:
                 if re.search(
-                    str(Seq(sequence[index] + ("." * i) + substr).reverse_complement()),
+                    str(Seq(sequence[index] + ("." * j) + substr).reverse_complement()),
                     searchstring,
                 ):
-                    return (True, i)
+                    return (True, j)
     return (False, -1)
 
 
