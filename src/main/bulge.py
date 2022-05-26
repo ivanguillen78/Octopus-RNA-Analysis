@@ -144,7 +144,6 @@ def check_bulge_rev_comp(substr, maxLength, sequence, index, searchstring, type)
     if type == "right":
         for i in range(1, maxLength + 1):
             if index + i < len(sequence):
-                showme = substr + sequence[index + i]
                 if re.search(
                     str(Seq(substr + sequence[index + i]).reverse_complement()),
                     searchstring,
@@ -153,7 +152,6 @@ def check_bulge_rev_comp(substr, maxLength, sequence, index, searchstring, type)
     if type == "left":
         for i in range(1, maxLength + 1):
             if index - i >= 0:
-                showme = sequence[index - i] + substr
                 if re.search(
                     str(Seq(sequence[index - i] + substr).reverse_complement()),
                     searchstring,
