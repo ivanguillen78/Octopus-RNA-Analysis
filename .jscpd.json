@@ -17,6 +17,6 @@
       "**/*.md",
       "**/*.html",
       "**/*.xml",
-      "**/*.py"
+      "src/main/bulge.py"
     ]
   }
