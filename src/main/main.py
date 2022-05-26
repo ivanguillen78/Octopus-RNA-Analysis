@@ -99,10 +99,10 @@ def find_secondary_structures(edit_dict, fasta_file):
     Iterates through edit dictionary and finds longest reverse complement
     for each edit.
     """
-    args.loopLength = args.loopLength if args.loopLength != None else 1
-    args.numLoops = args.numLoops if args.numLoops != None else 1
-    args.bulgeLength = args.bulgeLength if args.bulgeLength != None else 1
-    args.numBulges = args.numBulges if args.numBulges != None else 1
+    args.loopLength = args.loopLength if args.loopLength is not None else 1
+    args.numLoops = args.numLoops if args.numLoops is not None else 1
+    args.bulgeLength = args.bulgeLength if args.bulgeLength is not None else 1
+    args.numBulges = args.numBulges if args.numBulges is not None else 1
     output_list = []
     with open(fasta_file, encoding="utf8") as fastafile:
         edit_dict_size = 0
