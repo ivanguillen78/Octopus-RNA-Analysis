@@ -251,7 +251,7 @@ def test_longest_int_loop5():
 
 def test_create_int_loop5():
     seq8 = "GCTCGATGTCAGCCGTACGTACGATCGATCTGGCACCGAGCTATC"
-    #       (^(((.((.(((.................))).)).)))))....
+    #       ^((((.((.(((.................))).)).)))))....
     pos8 = 0
     length, base, base_loc, rev_comp, rev_comp_loc = create_secondary_structure_loop(
         seq8, pos8, numLoops=2

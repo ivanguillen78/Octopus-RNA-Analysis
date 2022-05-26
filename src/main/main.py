@@ -108,19 +108,12 @@ def find_secondary_structures(edit_dict, fasta_file):
         edit_dict_size = 0
         for edit in edit_dict:
             edit_dict_size += len(edit_dict[edit])
-        numSequences = int(len(fastafile.readlines()) / 2)
         parser = fastaparser.Reader(fastafile)
-        sequence_dict = {}
-        print("Preparing data")
-        with alive_bar(numSequences, bar="smooth", spinner="fish2") as bar:
-            for seq in parser:
-                bar()
-                sequence_dict[seq.id] = seq.sequence_as_string()
-        print("Data preparation complete. Locating secondary structures.")
+        print("Locating secondary structures")
         with alive_bar(edit_dict_size, bar="smooth", spinner="fish2") as bar:
-            for edit in edit_dict:
-                if edit in sequence_dict:
-                    for pos in edit_dict[edit]:
+            for seq in parser:
+                if seq.id in edit_dict:
+                    for edit in edit_dict[seq.id]:
                         bar()
                         if args.structType == "hairpin":
                             (
@@ -130,7 +123,7 @@ def find_secondary_structures(edit_dict, fasta_file):
                                 rev,
                                 rev_loc,
                             ) = create_secondary_structure_hairpin(
-                                sequence_dict[edit], pos
+                                seq.sequence_as_string(), edit
                             )
                         elif args.structType == "int_loop":
                             (
@@ -140,8 +133,8 @@ def find_secondary_structures(edit_dict, fasta_file):
                                 rev,
                                 rev_loc,
                             ) = create_secondary_structure_loop(
-                                sequence_dict[edit],
-                                pos,
+                                seq.sequence_as_string(),
+                                edit,
                                 args.loopLength,
                                 args.numBulges,
                             )
@@ -153,15 +146,15 @@ def find_secondary_structures(edit_dict, fasta_file):
                                 rev,
                                 rev_loc,
                             ) = create_secondary_structure_bulge(
-                                sequence_dict[edit],
-                                pos,
+                                seq.sequence_as_string(),
+                                edit,
                                 args.bulgeLength,
                                 args.numLoops,
                             )
                         output_list.append(
                             {
-                                "id": edit,
-                                "position": pos,
+                                "id": seq.id,
+                                "position": edit,
                                 "length": length,
                                 "base": base,
                                 "base_location": base_loc,
