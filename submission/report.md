@@ -7,15 +7,15 @@ Nucleic acid secondary structures are base-pairing interactions that occur withi
 
 **Hairpin loops** are a common type of secondary structure that are created when a sequence of RNA folds upon itself and forms base pairs with another section of the same sequence.  
 
-![hairpin loop secondary structure](assets/hairpin.png "Hairpin")
+![hairpin loop secondary structure](../assets/hairpin.png "Hairpin")
 
 **Internal Loops** are similar, but feature a short sequence of unpaired bases within a larger sequence of paired bases.
 
-![internal loop secondary structure](assets/int_loop.png "Internal Loop")
+![internal loop secondary structure](../assets/int_loop.png "Internal Loop")
 
 **Bulges** are also similar, but feature regions on one side of the folded structure that have extra bases with no corresponding bases on the opposite side.
 
-![bulge secondary structure](assets/bulge.png "Bulge")
+![bulge secondary structure](../assets/bulge.png "Bulge")
 
 As seen in the images above, for every structure, there is a "base" string of bases and a "reverse complement" string of bases. The base string is continually expanded around the provided edit site, provided that the reverse complement of that base string exists somewhere else in the sequence. 
 ### Reverse Complements
@@ -82,7 +82,7 @@ As seen above, we cannot search to the left and right at the same time. Therefor
 ### Step 2
 The second step is similar to the first, but now our goal is to find the longest overall reverse complement, which means we must search to the right. While we could simply add on to `longest` from Step 1, we must remember that the addition of a base on either end (the left end in this case) could hinder our search to the right. Therefore, to account for all possibilities, we iterate through every index from `L` to `E`, ensuring that all base strings that include `E` have been checked. Additionally, because our goal is to produce the longest structure, we increment `R` alongside `L` at the end of each iteration to ensure that at each iteration, we are searching for a reverse complement of **at least** the same length as the current longest.
 ### Visualization
-![algorithm visualization](assets/algo_visual.png "Algorithm Visualization")
+![algorithm visualization](../assets/algo_visual.png "Algorithm Visualization")
 
 ### Additional Modifications for Internal Loops and Bulges
 While the base algorithm is similar for all three types, additional modifications were needed to account for unpaired/extra bases in internal loops and bulges. Regular expression searches were used instead of Python’s built-in string.find() and periods (“.”) were used to simulate gaps between paired bases. A boolean flag was set if a jump over the unpaired/extra bases could be made. The jump would only be made if necessary.
