@@ -136,7 +136,7 @@ def find_secondary_structures(edit_dict, fasta_file):
                                 seq.sequence_as_string(),
                                 edit,
                                 args.loopLength,
-                                args.numBulges,
+                                args.numLopops,
                             )
                         else:
                             (
@@ -149,7 +149,7 @@ def find_secondary_structures(edit_dict, fasta_file):
                                 seq.sequence_as_string(),
                                 edit,
                                 args.bulgeLength,
-                                args.numLoops,
+                                args.numBulges,
                             )
                         output_list.append(
                             {
