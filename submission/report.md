@@ -1,4 +1,4 @@
-# Secondary Structure Identification in RNA
+# [Secondary Structure Identification in RNA](https://github.com/wwu-cs/Octopus-RNA-Analysis)
 ## Background
 ### Introduction
 At Walla Walla University, and many other universities, senior computer science majors are required to work on a capstone project to show what they're learned over the course of their college experience. When it came time to select my project, I was unsure about what I wanted to work on. Professor James Foster, one of my advisors for this course, introduced me to Dr. Kirt Onthank, an associate professor of Biology at WWU. Dr. Onthank's research includes the study of ocean acidification and its impact on marine life, especially cephalopods. For this project, Dr. Onthank was looking for someone to implement a program that could identify secondary structures in octopus RNA sequences around a specific edit site. This would allow him to identify real edits as opposed to false positives, which, in turn, would allow him to observe the effects of ocean acidification on RNA editing in octopuses. 
