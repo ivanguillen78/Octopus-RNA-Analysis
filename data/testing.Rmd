@@ -1,7 +1,0 @@
-```{r}
-loopdatafixed <- read.csv("output_hairpin.csv", header = TRUE)
-```
-
-```{r}
-table(loopdatafixed$length)
-```
